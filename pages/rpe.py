@@ -17,7 +17,21 @@ status = authenticate()
 if status:
     # Use creds to create a client to interact with the Google Drive API
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds = ServiceAccountCredentials.from_json_keyfile_name('secrets.json', scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict({
+        "type": st.secrets.google_api.type,
+        "project_id": st.secrets.google_api.project_id,
+        "private_key_id": st.secrets.google_api.private_key_id,
+        "private_key": st.secrets.google_api.private_key,
+        "client_email": st.secrets.google_api.client_email,
+        "client_id": st.secrets.google_api.client_id,
+        "auth_uri": st.secrets.google_api.auth_uri,
+        "token_uri": st.secrets.google_api.token_uri,
+        "auth_provider_x509_cert_url": st.secrets.google_api.auth_provider_x509_cert_url,
+        "client_x509_cert_url": st.secrets.google_api.client_x509_cert_url,
+    }, scope)
+    # import pdb;
+    #
+    # pdb.set_trace()
     client = gspread.authorize(creds)
 
     # Open the Google Sheets document
