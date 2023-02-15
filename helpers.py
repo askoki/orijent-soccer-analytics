@@ -1,19 +1,25 @@
 import streamlit as st
-import yaml
 from streamlit_authenticator import Authenticate
-from yaml import SafeLoader
 
 
 def authenticate():
-    with open('config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
+    credentials = {
+        'usernames': {}
+    }
+    for user in st.secrets.auth.users:
+        single_cred_dict: dict = {}
+        single_cred_dict[user['username']] = {
+            'email': user['email'],
+            'name': user['name'],
+            'password': user['password']
+        }
+        credentials['usernames'].update(single_cred_dict)
 
     authenticator = Authenticate(
-        config['credentials'],
-        config['cookie']['name'],
-        config['cookie']['key'],
-        config['cookie']['expiry_days'],
-        config['preauthorized']
+        credentials,
+        st.secrets.auth.cookie['name'],
+        st.secrets.auth.cookie['key'],
+        st.secrets.auth.cookie['expiry_days'],
     )
     name, authentication_status, username = authenticator.login('Login', 'main')
 
