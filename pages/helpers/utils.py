@@ -1,8 +1,6 @@
 import io
 import matplotlib.pyplot as plt
 import streamlit as st
-
-import streamlit as st
 from streamlit_authenticator import Authenticate
 
 
