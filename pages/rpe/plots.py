@@ -3,7 +3,7 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 
 from pages.rpe.constants import RPE_LEGEND_LIST
-from pages.rpe.helpers import define_RPE_colors
+from pages.rpe.rpe_helpers import define_RPE_colors
 
 
 def create_rpe_bar_plot(

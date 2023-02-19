@@ -9,10 +9,10 @@ from datetime import datetime
 from matplotlib.transforms import Bbox
 from oauth2client.service_account import ServiceAccountCredentials
 
-from helpers import authenticate
-from pages.rpe.helpers import get_rpe_questioneer_df, extract_players_rpe_mean_and_std, define_RPE_colors
+
+from pages.helpers.utils import authenticate, add_download_image_button
 from pages.rpe.plots import create_rpe_bar_plot
-from pages.utils import add_download_image_button
+from pages.rpe.rpe_helpers import get_rpe_questioneer_df, extract_players_rpe_mean_and_std
 
 st.title("RPE")
 

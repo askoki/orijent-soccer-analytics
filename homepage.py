@@ -1,6 +1,6 @@
 import streamlit as st
 
-from helpers import authenticate
+from pages.helpers.utils import authenticate
 
 status = authenticate()
 if status:
