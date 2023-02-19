@@ -1,3 +1,5 @@
+import matplotlib.patches as mpatches
+
 RPE1_COLOR = '#5895fe'
 RPE23_COLOR = '#78e0df'
 RPE46_COLOR = '#87e740'
@@ -17,3 +19,12 @@ RPE_COLOR_DICT = {
     9: RPE9_COLOR,
     10: RPE10_COLOR,
 }
+
+RPE_LEGEND_LIST = [
+    mpatches.Patch(color=RPE1_COLOR, label='Very Light'),
+    mpatches.Patch(color=RPE23_COLOR, label='Light'),
+    mpatches.Patch(color=RPE46_COLOR, label='Moderate'),
+    mpatches.Patch(color=RPE78_COLOR, label='Vigorous'),
+    mpatches.Patch(color=RPE9_COLOR, label='Very Hard'),
+    mpatches.Patch(color=RPE10_COLOR, label='Max Effort'),
+]

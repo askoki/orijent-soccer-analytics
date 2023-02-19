@@ -1,17 +1,16 @@
-import io
 import gspread
 import cyrtranslit
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
 import pandas as pd
 import streamlit as st
-from datetime import timedelta, datetime
+from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
 from helpers import authenticate
-from pages.rpe.constants import RPE1_COLOR, RPE23_COLOR, RPE46_COLOR, RPE78_COLOR, RPE9_COLOR, RPE10_COLOR
 from pages.rpe.helpers import get_rpe_questioneer_df, extract_players_rpe_mean_and_std, define_RPE_colors
+from pages.rpe.plots import create_rpe_bar_plot
+from pages.utils import add_download_image_button
 
 st.title("RPE")
 
@@ -58,63 +57,21 @@ if status:
     # ---------------------------------------------
     st.header("Session report")
 
-    fig, ax = plt.subplots(figsize=(14, 8), nrows=1, ncols=1)
     players = session_df.name.unique()
-
-    fig.suptitle(f'RPE session report {session_date}', fontsize=30, weight='bold')
-    facecolor = "white"
-    fig.set_facecolor(facecolor)
-
     session_param_values = session_df.rpe.values
     mean_l, std_l = extract_players_rpe_mean_and_std(session_df, rpe_df)
 
-    colors = define_RPE_colors(session_df.rpe.values)
-
-    ax.bar(players, session_param_values, align='center', color=colors, width=0.6, label='RPE', capsize=6)
-    for x, y in zip(players, session_param_values):
-        ax.text(x, y + 0.1, f'{y}', ha='center', va='bottom', fontsize=12)
-
-    x_tick_labels, y_tick_labels = ax.get_xticklabels(), ax.get_yticklabels()
-    for x_tick_label in x_tick_labels:
-        x_tick_label.set_fontweight('bold')
-    for y_tick_label in y_tick_labels:
-        y_tick_label.set_fontweight('bold')
-        y_tick_label.set_fontsize(14)
-
-    ax.set_ylabel('RPE', fontsize=18, weight='bold')
-    ax.set_xlabel('Players', fontsize=18, weight='bold')
-    ax.set_ylim(ymin=0, ymax=10)
-    ax.set_facecolor(facecolor)
-    plt.xticks(rotation=90)
-
-    RPE_LEGEND_LIST = [
-        mpatches.Patch(color=RPE1_COLOR, label='Very Light'),
-        mpatches.Patch(color=RPE23_COLOR, label='Light'),
-        mpatches.Patch(color=RPE46_COLOR, label='Moderate'),
-        mpatches.Patch(color=RPE78_COLOR, label='Vigorous'),
-        mpatches.Patch(color=RPE9_COLOR, label='Very Hard'),
-        mpatches.Patch(color=RPE10_COLOR, label='Max Effort'),
-    ]
-    ax.legend(
-        handles=RPE_LEGEND_LIST, loc='upper center',
-        bbox_to_anchor=(0.5, 1.07), ncol=3, fancybox=True, shadow=True,
-        prop={'size': 12}
+    fig = create_rpe_bar_plot(
+        figsize=(14, 8),
+        title=f'RPE session report {session_date}',
+        x_label='Players',
+        y_label='RPE',
+        x_values=players,
+        y_values=session_param_values
     )
-
-    # individual_report_dir = os.path.join(exports_path, 'individual_session')
-    # save_path = os.path.join(individual_report_dir, f'RPE_session_report_{session_date}.png')
     fig.text(0.82, -0.2, "Created by Arian Skoki", ha="center", va="bottom", fontsize=14, weight='bold')
-    # fig.savefig(save_path, dpi=150, facecolor=fig.get_facecolor())
     st.pyplot(fig)
-    img = io.BytesIO()
-    fig.savefig(img, format='png', facecolor=fig.get_facecolor())
-
-    btn = st.download_button(
-        label="Download session report",
-        data=img,
-        file_name=f'RPE_session_report_{session_date}.png',
-        mime="image/png"
-    )
+    add_download_image_button(fig, "Download session report", f'RPE_session_report_{session_date}.png')
 
     # ---------------------------------------------
     st.markdown("""---""")
@@ -151,51 +108,24 @@ if status:
     week_df = week_df.reset_index().rename(columns={'index': 'session_date'})
     week_df.loc[:, 'session_date'] = pd.to_datetime(week_df.session_date).dt.date
 
-    fig, ax = plt.subplots(figsize=(10, 6), nrows=1, ncols=1)
-
-    title = f'RPE team report {session_start_date.strftime("%d.%m.%y")}-{session_end_date.strftime("%d.%m.%y")}'
-    fig.suptitle(title, fontsize=30, weight='bold')
-    facecolor = "white"
-    fig.set_facecolor(facecolor)
-
     week_values = week_df.rpe_mean.values
-    colors = define_RPE_colors(week_df.rpe_mean.values)
 
-    ax.bar(week_df.session_date, week_values, align='center', yerr=week_df.rpe_std.values, color=colors, width=0.6,
-           label='RPE (team mean)', capsize=6)
-    for x, y in zip(week_df.session_date, week_values):
-        ax.text(x, y + 0.1, f'{y}', ha='center', va='bottom', fontsize=12)
-
-    x_tick_labels, y_tick_labels = ax.get_xticklabels(), ax.get_yticklabels()
-    for x_tick_label in x_tick_labels:
-        x_tick_label.set_fontweight('bold')
-    for y_tick_label in y_tick_labels:
-        y_tick_label.set_fontweight('bold')
-        y_tick_label.set_fontsize(14)
-
-    ax.set_ylabel('RPE', fontsize=18, weight='bold')
-    ax.set_xlabel('Dates', fontsize=18, weight='bold')
-    ax.set_ylim(ymin=0, ymax=10)
-    ax.set_facecolor(facecolor)
+    team_report_title = f'RPE team report {session_start_date.strftime("%d.%m.%y")}-{session_end_date.strftime("%d.%m.%y")}'
+    fig = create_rpe_bar_plot(
+        figsize=(14, 8),
+        title=team_report_title,
+        x_label='Dates',
+        y_label='RPE',
+        x_values=week_df.session_date,
+        y_values=week_values,
+        y_err=week_df.rpe_std.values
+    )
+    fig.text(0.82, 0.01, "Created by Arian Skoki", ha="center", va="bottom", fontsize=14, weight='bold')
     plt.xticks(rotation=15)
 
-    ax.legend(
-        handles=RPE_LEGEND_LIST, loc='upper center',
-        bbox_to_anchor=(0.5, 1.07), ncol=3, fancybox=True, shadow=True,
-        prop={'size': 12}
-    )
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d/%m/%Y'))
     plt.gca().xaxis.set_major_locator(mdates.DayLocator())
 
-    fig.text(0.82, 0.01, "Created by Arian Skoki", ha="center", fontsize=14, weight='bold')
     st.pyplot(fig=fig)
-    img = io.BytesIO()
-    fig.savefig(img, format='png', facecolor=fig.get_facecolor())
-
-    btn = st.download_button(
-        label="Download team report",
-        data=img,
-        file_name=f'{title}.png',
-        mime="image/png"
-    )
+    add_download_image_button(fig, "Download team report", f'{team_report_title}.png')
     # ---------------------------------------------
