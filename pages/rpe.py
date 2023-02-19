@@ -5,6 +5,8 @@ import matplotlib.dates as mdates
 import pandas as pd
 import streamlit as st
 from datetime import datetime
+
+from matplotlib.transforms import Bbox
 from oauth2client.service_account import ServiceAccountCredentials
 
 from helpers import authenticate
@@ -71,7 +73,10 @@ if status:
     )
     fig.text(0.82, -0.2, "Created by Arian Skoki", ha="center", va="bottom", fontsize=14, weight='bold')
     st.pyplot(fig)
-    add_download_image_button(fig, "Download session report", f'RPE_session_report_{session_date}.png')
+    add_download_image_button(
+        fig, "Download session report", f'RPE_session_report_{session_date}.png',
+        bbox_inches=Bbox([[0, -2.5], fig.get_size_inches()])
+    )
 
     # ---------------------------------------------
     st.markdown("""---""")
