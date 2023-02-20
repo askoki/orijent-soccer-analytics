@@ -28,3 +28,8 @@ RPE_LEGEND_LIST = [
     mpatches.Patch(color=RPE9_COLOR, label='Very Hard'),
     mpatches.Patch(color=RPE10_COLOR, label='Max Effort'),
 ]
+
+FEATURES_2_EXTRACT = [
+    'total_distance', 'hsr_dist', 'sprint_dist', 'max_speed_km_h',
+    'mpe_count', 'acc_events', 'dec_events', 'mpe_avg_rec_time'
+]

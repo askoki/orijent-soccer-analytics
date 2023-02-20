@@ -1,5 +1,5 @@
 from datetime import timedelta
-from pages.rpe.constants import RPE_COLOR_DICT
+from pages.helpers.constants import RPE_COLOR_DICT
 import pandas as pd
 
 

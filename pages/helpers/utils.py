@@ -1,7 +1,11 @@
 import io
 import matplotlib.pyplot as plt
+import pandas as pd
 import streamlit as st
+from io import StringIO
 from streamlit_authenticator import Authenticate
+from googleapiclient.discovery import build
+from oauth2client.service_account import ServiceAccountCredentials
 
 
 def authenticate():
@@ -45,3 +49,32 @@ def add_download_image_button(fig: plt.Figure, button_text: str, filename: str, 
         file_name=filename,
         mime="image/png"
     )
+
+
+@st.cache_data
+def load_google_drive_data() -> pd.DataFrame:
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    creds = ServiceAccountCredentials.from_json_keyfile_dict({
+        "type": st.secrets.google_api.type,
+        "project_id": st.secrets.google_api.project_id,
+        "private_key_id": st.secrets.google_api.private_key_id,
+        "private_key": st.secrets.google_api.private_key,
+        "client_email": st.secrets.google_api.client_email,
+        "client_id": st.secrets.google_api.client_id,
+        "auth_uri": st.secrets.google_api.auth_uri,
+        "token_uri": st.secrets.google_api.token_uri,
+        "auth_provider_x509_cert_url": st.secrets.google_api.auth_provider_x509_cert_url,
+        "client_x509_cert_url": st.secrets.google_api.client_x509_cert_url,
+    }, scope)
+    drive_service = build('drive', 'v3', credentials=creds)
+    nn_folder_id = '1RXznak6Q4gVWGxY2a9Mnma_yLjfXnVN6'
+
+    results = drive_service.files().list(
+        q=f"name='nn_gps_data.csv' and parents in '{nn_folder_id}'"
+    ).execute()
+    resulting_files = results.get('files', [])
+    request = drive_service.files().get_media(fileId=resulting_files[0]['id'])
+    content = request.execute()
+    csv_data = StringIO(content.decode('utf-8'))
+    df = pd.read_csv(csv_data)
+    return df
