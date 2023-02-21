@@ -33,3 +33,18 @@ FEATURES_2_EXTRACT = [
     'total_distance', 'hsr_dist', 'sprint_dist', 'max_speed_km_h',
     'mpe_count', 'acc_events', 'dec_events', 'mpe_avg_rec_time'
 ]
+
+RELATIVE_PARAMS_2_EXTRACT = [
+    'sprint_dist', 'hsr_dist', 'tot_dist', 'acc_num', 'dec_num', 'mpe'
+]
+
+DARK_GRAY = '#7f7f7f'
+LIGHT_GRAY = '#d9d9d9'
+GPS_RELATIVE_PLOT_FILL_DESIGN = [
+    (DARK_GRAY, True, None, 0.6),
+    (LIGHT_GRAY, True, None, 0.6),
+    (None, False, '///', 0.6),
+    (None, False, '..', 0.2),
+    (None, False, 'OO', 0.2),
+    (None, False, '', 0.2)
+]
