@@ -9,11 +9,11 @@ from datetime import datetime
 from matplotlib.transforms import Bbox
 from oauth2client.service_account import ServiceAccountCredentials
 
-
-from pages.helpers.utils import authenticate, add_download_image_button
+from pages.helpers.utils import authenticate, add_download_image_button, add_page_logo
 from pages.rpe.rpe_plots import create_rpe_bar_plot
 from pages.rpe.rpe_helpers import get_rpe_questioneer_df, extract_players_rpe_mean_and_std
 
+add_page_logo()
 st.title("RPE")
 
 status = authenticate()

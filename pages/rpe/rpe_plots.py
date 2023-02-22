@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from typing import Tuple, List
 from pages.helpers.constants import RPE_LEGEND_LIST
@@ -13,8 +14,9 @@ def create_rpe_bar_plot(
         y_values: list,
         y_err=None
 ) -> plt.Figure:
+    mpl.style.use('classic')
     fig, ax = plt.subplots(figsize=figsize, nrows=1, ncols=1)
-    fig.suptitle(title, fontsize=30, weight='bold')
+    fig.suptitle(title, fontsize=20, weight='bold')
     facecolor = "white"
     fig.set_facecolor(facecolor)
 
