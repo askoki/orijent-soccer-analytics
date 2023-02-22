@@ -4,6 +4,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from PIL import Image
 from io import StringIO
+
+from matplotlib.backends.backend_pdf import PdfPages
 from streamlit_authenticator import Authenticate
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
@@ -86,4 +88,25 @@ def add_page_logo():
     st.set_page_config(
         page_title="Nizhny Novgorod Analytics",
         page_icon=img
+    )
+
+
+def add_download_pdf_from_plots_button(button_text: str, filename: str):
+    pdf_name = 'pdf_output.pdf'
+    pdf = PdfPages(pdf_name)
+
+    for fig in range(1, plt.gcf().number + 1):
+        pdf.savefig(fig)
+        plt.close()
+    pdf.close()
+    plt.close()
+
+    with open(pdf_name, "rb") as pdf_file:
+        pdf_byte = pdf_file.read()
+
+    st.download_button(
+        label=button_text,
+        data=pdf_byte,
+        file_name=filename,
+        mime='application/octet-stream'
     )
