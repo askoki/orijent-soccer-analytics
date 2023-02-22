@@ -1,7 +1,8 @@
 import io
-import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
+from PIL import Image
 from io import StringIO
 from streamlit_authenticator import Authenticate
 from googleapiclient.discovery import build
@@ -78,3 +79,11 @@ def load_google_drive_data() -> pd.DataFrame:
     csv_data = StringIO(content.decode('utf-8'))
     df = pd.read_csv(csv_data)
     return df
+
+
+def add_page_logo():
+    img = Image.open('NN_logo.jpg')
+    st.set_page_config(
+        page_title="Nizhny Novgorod Analytics",
+        page_icon=img
+    )

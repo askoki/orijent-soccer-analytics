@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 from typing import Tuple
 from datetime import timedelta
+
+from pages.gps_relative.gps_relative_helpers import extract_max_features
 from pages.helpers.constants import FEATURES_2_EXTRACT, RELATIVE_PARAMS_2_EXTRACT, GPS_RELATIVE_PLOT_FILL_DESIGN
-from pages.homepage.homepage_helpers import extract_max_features
 from pages.rpe.rpe_plots import get_colors_and_percentages
 
 

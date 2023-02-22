@@ -3,20 +3,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
-from PIL import Image
 from datetime import datetime
 from matplotlib.ticker import MaxNLocator
 from pages.helpers.constants import FEATURES_2_EXTRACT, RELATIVE_PARAMS_2_EXTRACT
-from pages.homepage.homepage_plots import create_gps_single_session_plot, create_gps_relative_plot
-from pages.helpers.utils import authenticate, load_google_drive_data, add_download_image_button
+from pages.gps_relative.gps_relative_plots import create_gps_single_session_plot, create_gps_relative_plot
+from pages.helpers.utils import authenticate, load_google_drive_data, add_download_image_button, add_page_logo
 
-img = Image.open('NN_logo.jpg')
-st.set_page_config(
-    page_title="Nizhny Novgorod Analytics",
-    page_icon=img
-)
-
+add_page_logo()
 status = authenticate()
 if status:
     df = load_google_drive_data()
