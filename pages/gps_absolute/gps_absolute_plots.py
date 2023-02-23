@@ -23,8 +23,8 @@ DURATION_COLOR = '#f95d6a'
 
 
 def draw_2axis_plot(df: pd.DataFrame, labels1: AxisLabels, labels2: AxisLabels, plot_label: PlotLabels,
-                    df_params: DataFrameParameters, colors: PlotColors, limits: LimitsDoubleAxis):
-    x = np.arange(len(df.date))
+                    df_params: DataFrameParameters, colors: PlotColors, limits: LimitsDoubleAxis, x_param='date'):
+    x = np.arange(len(df[x_param]))
     width = 0.35
 
     mpl.style.use('ggplot')
@@ -52,7 +52,7 @@ def draw_2axis_plot(df: pd.DataFrame, labels1: AxisLabels, labels2: AxisLabels, 
     ax2.yaxis.label.set_color(ax2_color)
 
     ax1.set_xticks(x)
-    ax1.set_xticklabels(df.date, rotation=45)
+    ax1.set_xticklabels(df[x_param], rotation=45)
 
     ax1.set_ylim(limits.ax1_y_lim)
     ax2.set_ylim(limits.ax2_y_lim)
@@ -66,8 +66,8 @@ def draw_2axis_plot(df: pd.DataFrame, labels1: AxisLabels, labels2: AxisLabels, 
 
 
 def draw_double_bar_plot(df: pd.DataFrame, labels: AxisLabels, plot_label: PlotLabels, df_params: DataFrameParameters,
-                         colors: PlotColors, limits: Limits):
-    x = np.arange(len(df.date))
+                         colors: PlotColors, limits: Limits, x_param='date'):
+    x = np.arange(len(df[x_param]))
     width = 0.35
 
     param1 = df_params[0]
@@ -87,7 +87,7 @@ def draw_double_bar_plot(df: pd.DataFrame, labels: AxisLabels, plot_label: PlotL
     ax.set_ylim(limits)
 
     ax.set_xticks(x)
-    ax.set_xticklabels(df.date, rotation=45)
+    ax.set_xticklabels(df[x_param], rotation=45)
     plt.legend()
     plt.tight_layout()
     return fig, ax
@@ -103,48 +103,52 @@ TOTAL_DISTANCE_DURATION_LIMITS = LimitsDoubleAxis((0, 15000), (0, 120))
 RPE_SRPE_LIMITS = LimitsDoubleAxis((0, 10), (0, 1200))
 
 
-def draw_hsr_sprint_plot(player_df: pd.DataFrame) -> MatplotlibFigureAxis:
+def draw_hsr_sprint_plot(player_df: pd.DataFrame, x_label='Dates', y_label='HSR', x_param='date') -> MatplotlibFigureAxis:
     return draw_double_bar_plot(
         player_df,
-        ('Dates', 'Distance (m)'),
-        ('HSR', 'Sprint'),
+        (x_label, 'Distance (m)'),
+        (y_label, 'Sprint'),
         ('hsr_dist', 'sprint_dist'),
         (None, None),
-        HSR_SPRINT_LIMITS
+        HSR_SPRINT_LIMITS,
+        x_param=x_param
     )
 
 
-def draw_mpe_max_sprint(player_df: pd.DataFrame) -> MatplotlibFigureDoubleAxis:
+def draw_mpe_max_sprint(player_df: pd.DataFrame, x_label='Dates', y_label='Dates', x_param='date') -> MatplotlibFigureDoubleAxis:
     return draw_2axis_plot(
         player_df,
-        ('Dates', 'MPE count'),
-        ('Dates', 'Max speed (km/h)'),
+        (x_label, 'MPE count'),
+        (y_label, 'Max speed (km/h)'),
         ('MPE events', 'Max speed (km/h)'),
         ('mpe', 'max_speed_km_h'),
         (MPE_EVENTS_COLOR, MAX_SPEED_COLOR),
-        MPE_MAX_SPEED_LIMITS
+        MPE_MAX_SPEED_LIMITS,
+        x_param=x_param
     )
 
 
-def draw_mpe_p_avg_rec_t(player_df: pd.DataFrame) -> MatplotlibFigureDoubleAxis:
+def draw_mpe_p_avg_rec_t(player_df: pd.DataFrame, x_label='Dates', y_label='Dates', x_param='date') -> MatplotlibFigureDoubleAxis:
     return draw_2axis_plot(
         player_df,
-        ('Dates', 'MPE avg power (W)'),
-        ('Dates', 'MPE avg rec time (s)'),
+        (x_label, 'MPE avg power (W)'),
+        (y_label, 'MPE avg rec time (s)'),
         ('MPE avg power', 'MPE avg rec time'),
         ('mpe_avg_power', 'mpe_avg_rec_time'),
         (MPE_P_COLOR, MPE_REC_T_COLOR),
-        MPE_POWER_REC_TIME_LIMITS
+        MPE_POWER_REC_TIME_LIMITS,
+        x_param=x_param
     )
 
 
-def draw_distance_duration(player_df: pd.DataFrame) -> MatplotlibFigureDoubleAxis:
+def draw_distance_duration(player_df: pd.DataFrame, x_label='Dates', y_label='Dates', x_param='date') -> MatplotlibFigureDoubleAxis:
     return draw_2axis_plot(
         player_df,
-        ('Dates', 'Distance (m)'),
-        ('Dates', 'Duration (min)'),
+        (x_label, 'Distance (m)'),
+        (y_label, 'Duration (min)'),
         ('Distance', 'Duration'),
         ('tot_dist', 'duration_min'),
         (DISTANCE_COLOR, DURATION_COLOR),
-        TOTAL_DISTANCE_DURATION_LIMITS
+        TOTAL_DISTANCE_DURATION_LIMITS,
+        x_param=x_param
     )
