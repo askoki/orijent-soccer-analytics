@@ -83,9 +83,9 @@ def load_google_drive_data() -> pd.DataFrame:
 
 
 def add_page_logo():
-    img = Image.open('NN_logo.jpg')
+    img = Image.open('orijent_logo.png')
     st.set_page_config(
-        page_title="Nizhny Novgorod Analytics",
+        page_title="HNK Orijent Analytics",
         page_icon=img
     )
 
