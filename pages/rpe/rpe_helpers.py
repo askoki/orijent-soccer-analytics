@@ -11,8 +11,8 @@ def get_rpe_questioneer_df(worksheet) -> pd.DataFrame:
 
     df = df.rename(columns={
         'Timestamp': 'timestamp',
-        'Имя Фамилия / Player': 'name',
-        'Дата / Session date': 'session_date',
+        'Ime / Name': 'name',
+        'Datum treninga / Session date': 'session_date',
         'RPE': 'rpe'
     })
     df.name = df.name.str.replace('\t', '')
