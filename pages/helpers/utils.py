@@ -70,10 +70,9 @@ def load_google_drive_data() -> pd.DataFrame:
         "client_x509_cert_url": st.secrets.google_api.client_x509_cert_url,
     }, scope)
     drive_service = build('drive', 'v3', credentials=creds)
-    nn_folder_id = '1RXznak6Q4gVWGxY2a9Mnma_yLjfXnVN6'
 
     results = drive_service.files().list(
-        q=f"name='nn_gps_data.csv' and parents in '{nn_folder_id}'"
+        q=f"name='{st.secrets.google_drive.gps_file_name}' and parents in '{st.secrets.google_drive.gps_folder_id}'"
     ).execute()
     resulting_files = results.get('files', [])
     request = drive_service.files().get_media(fileId=resulting_files[0]['id'])

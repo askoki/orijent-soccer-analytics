@@ -36,7 +36,7 @@ if status:
     client = gspread.authorize(creds)
 
     # Open the Google Sheets document
-    sheet = client.open('NN RPE').sheet1
+    sheet = client.open(st.secrets.google_sheets.rpe_sheet_name).sheet1
 
     rpe_df = get_rpe_questioneer_df(worksheet=sheet)
     rpe_df = rpe_df.drop(columns=[
